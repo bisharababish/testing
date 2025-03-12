@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="snake-game.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <title>Snake Game</title>
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <h1>Snake Game</h1>
+            <button class="settings-btn" id="settingsBtn">⚙️</button>
+        </div>
+        <button id="logoutBtn" style="display: none;">Logout</button>
+        <div class="login-overlay" id="loginOverlay">
+            <div class="login-container">
+                <h2>Login</h2>
+                <form id="loginForm">
+                    <input type="text" id="usernameInput" placeholder="Enter your username" required>
+                    <button type="submit">Start Game</button>
+                </form>
+            </div>
+        </div>
+    
+        <div class="settings-panel" id="settingsPanel">
+            <h3>Settings</h3>
+            <div class="setting-row">
+                <label for="difficulty">Difficulty:</label>
+                <select id="difficulty">
+                    <option value="easy">Easy</option>
+                    <option value="normal" selected>Normal</option>
+                    <option value="hard">Hard</option>
+                    <option value="extreme">Extreme</option>
+                </select>
+            </div>
+            <div class="setting-row">
+                <label for="gridToggle">Show Grid:</label>
+                <input type="checkbox" id="gridToggle" checked>
+            </div>
+            <div class="setting-row">
+                <label for="snakeColorPicker">Snake Color:</label>
+                <input type="color" id="snakeColorPicker" value="#32CD32">
+            </div>
+            <div class="setting-row">
+                <button class="dark-mode-toggle" id="darkModeToggle">Toggle Dark Mode</button>
+            </div>
+            <div class="setting-row">
+                <button id="muteBtn">🔊 Mute</button>
+            </div>
+        </div>
+        
+        <div class="game-overlay" id="gameOverlay">
+            <div class="message-container">
+                <h2 id="overlayMessage">Game Over</h2>
+                <p id="finalScore">Score: 0</p>
+                <button id="restartBtn">Play Again</button>
+            </div>
+        </div>
+        
+        <canvas id="gameCanvas" width="400" height="400"></canvas>
+        
+        <div class="game-info">
+            <div class="stat-box">
+                <div class="stat-label">Score</div>
+                <div class="stat-value" id="score">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Level</div>
+                <div class="stat-value" id="level">1</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Coins Left</div>
+                <div class="stat-value" id="coinsLeft">5</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">High Score</div>
+                <div class="stat-value" id="highScore">0</div>
+            </div>
+        </div>
+        
+        <button class="start-btn pulse-animation" id="startBtn">Start Game</button>
+        
+        <div class="controls-hint">
+            <p>Use arrow keys or WASD to control the snake. </p>
+               <p>Press P to pause.</p> 
+        </div>
+        <div class="touch-hint" id="touchHint">
+            Swipe to control the snake
+        </div>
+        
+        <div class="powerup-indicator" id="powerupIndicator">
+            <div class="powerup-icon">⚡</div>
+            <div class="powerup-timer" id="powerupTimer"></div>
+        </div>
+    </div>
+    <div class="leaderboard-container">
+        <h2>Leaderboard</h2>
+        <div class="leaderboard" id="leaderboard">
+        </div>
+    </div>
+    <div class="swipe-feedback feedback-up" id="swipeFeedbackUp"></div>
+    <div class="swipe-feedback feedback-down" id="swipeFeedbackDown"></div>
+    <div class="swipe-feedback feedback-left" id="swipeFeedbackLeft"></div>
+    <div class="swipe-feedback feedback-right" id="swipeFeedbackRight"></div>
+    
+    <script src="snake-game.js"></script>
+</body>
+</html>

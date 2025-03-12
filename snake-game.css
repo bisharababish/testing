@@ -1,0 +1,682 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Press Start 2P', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    user-select: none;
+    transition: background-color 0.3s, color 0.3s;
+    overflow: hidden;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+}
+
+:root {
+    --bg-color: #f0f0f0;
+    --text-color: #333;
+    --canvas-border: #333;
+    --stats-bg: #eee;
+    --stats-border: #ccc;
+    --btn-bg: #4CAF50;
+    --btn-hover: #45a049;
+    --header-color: #2E7D32;
+    --settings-bg: #fff;
+    --shadow-color: rgba(0, 0, 0, 0.2);
+    --overlay-bg: rgba(0, 0, 0, 0.7);
+    --powerup-bg: rgba(0, 200, 255, 0.2);
+}
+
+.dark-mode {
+    --bg-color: #222;
+    --text-color: #f0f0f0;
+    --canvas-border: #555;
+    --stats-bg: #333;
+    --stats-border: #444;
+    --btn-bg: #2d662f;
+    --btn-hover: #235025;
+    --header-color: #4CAF50;
+    --settings-bg: #333;
+    --shadow-color: rgba(0, 0, 0, 0.4);
+    --overlay-bg: rgba(0, 0, 0, 0.8);
+    --powerup-bg: rgba(0, 150, 200, 0.3);
+}
+
+.game-container {
+    position: relative;
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    box-shadow: 0 0 20px var(--shadow-color);
+    border-radius: 10px;
+    background-color: var(--bg-color);
+    transition: background-color 0.3s;
+    margin: 0 auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.header h1 {
+    margin: 0;
+    color: var(--header-color);
+    font-size: 1.8rem;
+    font-weight: 700;
+    text-shadow: 1px 1px 2px var(--shadow-color);
+    transition: color 0.3s;
+    letter-spacing: 1px;
+}
+
+canvas {
+    border: 3px solid var(--canvas-border);
+    border-radius: 5px;
+    background-color: #000;
+    box-shadow: 0 5px 15px var(--shadow-color);
+    transition: border-color 0.3s;
+    max-width: 100%;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    display: block;
+    margin: 0 auto;
+}
+
+.game-info {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    background-color: var(--stats-bg);
+    border: 1px solid var(--stats-border);
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px var(--shadow-color);
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.stat-box {
+    display: flex;
+    flex-direction: column;
+    min-width: 80px;
+    text-align: center;
+}
+
+.stat-label {
+    font-size: 0.7rem;
+    color: var(--text-color);
+    opacity: 0.8;
+    margin-bottom: 5px;
+    transition: color 0.3s;
+}
+
+.stat-value {
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--header-color);
+    transition: color 0.3s;
+}
+
+.start-btn {
+    margin: 20px auto 0;
+    padding: 12px 30px;
+    background-color: var(--btn-bg);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    box-shadow: 0 4px 6px var(--shadow-color);
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
+    display: block;
+    font-family: 'Press Start 2P', sans-serif;
+}
+
+.start-btn:hover {
+    background-color: var(--btn-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px var(--shadow-color);
+}
+
+.start-btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px var(--shadow-color);
+}
+
+.pulse-animation {
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.settings-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--header-color);
+    transition: transform 0.2s, color 0.3s;
+    padding: 8px;
+}
+
+.settings-btn:hover {
+    transform: rotate(30deg);
+}
+
+.settings-panel {
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background-color: var(--settings-bg);
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 5px 15px var(--shadow-color);
+    z-index: 10;
+    width: 200px;
+    transform: translateX(250px);
+    opacity: 0;
+    transition: transform 0.3s, opacity 0.3s, background-color 0.3s;
+    pointer-events: none;
+}
+
+.settings-open {
+    transform: translateX(0);
+    opacity: 1;
+    pointer-events: all;
+}
+
+.settings-panel h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: var(--header-color);
+    transition: color 0.3s;
+    font-size: 0.9rem;
+}
+
+.setting-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--stats-border);
+    transition: border-color 0.3s;
+    font-size: 0.7rem;
+}
+
+.setting-row:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.dark-mode-toggle,
+#muteBtn {
+    width: 100%;
+    padding: 8px;
+    background-color: var(--btn-bg);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.7rem;
+    transition: background-color 0.3s;
+    font-family: 'Press Start 2P', sans-serif;
+}
+
+.dark-mode-toggle:hover,
+#muteBtn:hover {
+    background-color: var(--btn-hover);
+}
+
+select,
+input[type="color"] {
+    padding: 5px;
+    border-radius: 3px;
+    border: 1px solid var(--stats-border);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: border-color 0.3s, background-color 0.3s, color 0.3s;
+    font-family: 'Press Start 2P', sans-serif;
+    font-size: 0.6rem;
+}
+
+.touch-hint {
+    display: none;
+    margin: 15px auto 5px;
+    padding: 8px 12px;
+    background-color: var(--stats-bg);
+    border-radius: 20px;
+    font-size: 0.7rem;
+    color: var(--text-color);
+    width: fit-content;
+    opacity: 0.9;
+    box-shadow: 0 2px 4px var(--shadow-color);
+}
+
+.controls-hint {
+    margin-top: 15px;
+    font-size: 0.6rem;
+    color: var(--text-color);
+    opacity: 0.8;
+}
+
+.swipe-feedback {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.swipe-feedback-active {
+    opacity: 0.1;
+    animation: swipeFeedbackFade 0.5s forwards;
+}
+
+@keyframes swipeFeedbackFade {
+    0% {
+        opacity: 0.1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+.feedback-up {
+    background: linear-gradient(to top, transparent 70%, var(--btn-bg));
+}
+
+.feedback-down {
+    background: linear-gradient(to bottom, transparent 70%, var(--btn-bg));
+}
+
+.feedback-left {
+    background: linear-gradient(to left, transparent 70%, var(--btn-bg));
+}
+
+.feedback-right {
+    background: linear-gradient(to right, transparent 70%, var(--btn-bg));
+}
+
+
+.game-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--overlay-bg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    border-radius: 10px;
+}
+
+.game-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.message-container {
+    background-color: var(--bg-color);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px var(--shadow-color);
+    text-align: center;
+    max-width: 80%;
+    animation: popIn 0.5s ease-out;
+}
+
+@keyframes popIn {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.message-container h2 {
+    color: var(--header-color);
+    margin-top: 0;
+    font-size: 1.2rem;
+}
+
+.message-container p {
+    margin: 15px 0;
+    font-size: 0.9rem;
+}
+
+#restartBtn {
+    background-color: var(--btn-bg);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Press Start 2P', sans-serif;
+    font-size: 0.8rem;
+    transition: background-color 0.3s;
+}
+
+#restartBtn:hover {
+    background-color: var(--btn-hover);
+}
+
+.powerup-indicator {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: var(--powerup-bg);
+    border-radius: 5px;
+    padding: 5px 10px;
+    display: none;
+    align-items: center;
+    box-shadow: 0 2px 5px var(--shadow-color);
+    animation: glow 1.5s infinite alternate;
+}
+
+@keyframes glow {
+    0% {
+        box-shadow: 0 0 5px var(--btn-bg);
+    }
+
+    100% {
+        box-shadow: 0 0 15px var(--btn-bg);
+    }
+}
+
+.powerup-icon {
+    font-size: 1.2rem;
+    margin-right: 5px;
+}
+
+.powerup-timer {
+    font-size: 0.8rem;
+    color: var(--text-color);
+}
+
+@keyframes scoreUpdate {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.score-updated {
+    animation: scoreUpdate 0.5s ease;
+}
+
+@keyframes gameOver {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.game-over {
+    animation: gameOver 0.8s ease-out;
+}
+
+.touch-feedback {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.3);
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    animation: touchFeedback 0.5s ease-out forwards;
+}
+
+@keyframes touchFeedback {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(2);
+    }
+}
+
+@media (max-width: 600px) {
+    body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+        position: fixed;
+        overscroll-behavior: none;
+    }
+
+    .game-container {
+        padding: 10px;
+        border-radius: 8px;
+        margin: 0 auto;
+        max-width: 95vw;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .header h1 {
+        font-size: 1.2rem;
+    }
+
+    .touch-hint {
+        display: block;
+    }
+
+    .controls-hint {
+        display: none;
+    }
+
+    .mobile-controls {
+        display: flex;
+    }
+
+    .stat-box {
+        min-width: 60px;
+    }
+
+    .stat-label {
+        font-size: 0.6rem;
+    }
+
+    .stat-value {
+        font-size: 0.8rem;
+    }
+
+    .start-btn {
+        padding: 10px 25px;
+        font-size: 0.9rem;
+        margin: 15px auto 0;
+        display: block;
+    }
+
+    canvas {
+        width: 90vw;
+        height: 90vw;
+    }
+
+    .game-info {
+        margin: 10px auto;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+}
+
+@media (max-width: 400px) {
+    .game-container {
+        padding: 8px;
+    }
+
+    .header h1 {
+        font-size: 1rem;
+    }
+
+    .control-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+}
+
+/* Login Form Styles */
+.login-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--overlay-bg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.login-container {
+    background-color: var(--settings-bg);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px var(--shadow-color);
+    text-align: center;
+    max-width: 300px;
+    width: 100%;
+}
+
+.login-container h2 {
+    margin: 0 0 15px;
+    color: var(--header-color);
+    font-size: 1.2rem;
+}
+
+.login-container input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid var(--stats-border);
+    border-radius: 5px;
+    font-family: 'Press Start 2P', sans-serif;
+    font-size: 0.8rem;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+.login-container button {
+    width: 100%;
+    padding: 10px;
+    background-color: var(--btn-bg);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Press Start 2P', sans-serif;
+    font-size: 0.8rem;
+    transition: background-color 0.3s;
+}
+
+.login-container button:hover {
+    background-color: var(--btn-hover);
+}
+
+/* Leaderboard Styles */
+.leaderboard-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: var(--stats-bg);
+    border: 1px solid var(--stats-border);
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 5px var(--shadow-color);
+    max-width: 200px;
+    z-index: 100;
+}
+
+.leaderboard-container h2 {
+    margin: 0 0 10px;
+    font-size: 1rem;
+    color: var(--header-color);
+    text-align: center;
+}
+
+.leaderboard {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.leaderboard-entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px solid var(--stats-border);
+    font-size: 0.8rem;
+}
+
+.leaderboard-entry:last-child {
+    border-bottom: none;
+}
+
+.leaderboard-entry .username {
+    font-weight: bold;
+    color: var(--header-color);
+}
+
+.leaderboard-entry .score {
+    color: var(--text-color);
+}
