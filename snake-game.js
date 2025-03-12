@@ -173,7 +173,7 @@ if (currentUser) {
     logoutBtn.style.display = 'block';
 }
 
-const API_URL = 'https://slitherzone.netlify.app/'; // Replace with your backend URL
+const API_URL = 'https://testingsnakegame.netlify.app/'; // Replace with your backend URL
 
 // Fetch leaderboard from the server
 async function fetchLeaderboard() {
