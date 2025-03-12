@@ -173,8 +173,8 @@ if (currentUser) {
     logoutBtn.style.display = 'block';
 }
 
-const API_URL = 'https://testingsnakegame.netlify.app/'; // Replace with your backend URL
-
+// Backend API URL
+const API_URL = '/api'; // Relative path for Vercel
 // Fetch leaderboard from the server
 async function fetchLeaderboard() {
     try {
@@ -190,7 +190,7 @@ async function fetchLeaderboard() {
 // Submit score to the server
 async function submitScore(username, score) {
     try {
-        const response = await fetch(`${API_URL}/submit-score`, {
+        const response = await fetch(`${API_URL}/leaderboard`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -203,7 +203,6 @@ async function submitScore(username, score) {
         console.error('Error submitting score:', error);
     }
 }
-
 
 
 
